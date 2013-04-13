@@ -43,7 +43,7 @@ public class extractWordCorpus {
 	final private String anaToolChoice[] = {"HANNANUM","KOMA"};
 	final private String anaToolTargetTag[] = {"nc" , "CM"};
 	final private String anaToolContentTag[][] = {{"nc", "nq", "pv", "pa", "ma"},{"CMC", "CMP", "YB", "SB"}};
-	final private int windowSize = 4;
+	public int windowSize = 4;
 	public int eachAllSentSize;
 	public int eachSenseSize;
 	
@@ -187,6 +187,8 @@ public class extractWordCorpus {
 	    
 	    size = wsdTransList.size();
 	   
+	    if(!new File(senseDir).isDirectory())
+	    	new File(senseDir).mkdir();
 	    
 	    try {
 	    	targetTransWordFile = new FileWriter(new File( senseDir + targetWord+".trans"));
@@ -200,6 +202,8 @@ public class extractWordCorpus {
 				for(int j = 0; j < tmpSize; j++){
 					if( j != tmpSize -1)
 						targetTransWordFile.write(tmp.get(j) + "/");
+					else
+						targetTransWordFile.write(tmp.get(j));
 				}
 				targetTransWordFile.write("\n");
 			}
@@ -954,8 +958,10 @@ public class extractWordCorpus {
 		// TODO Auto-generated method stub
 		String targetWord = "가계";
 		extractWordCorpus ewc = new extractWordCorpus("krJpAlign/final.ko","krJpAlign/final.tg","krJpAlign/final.jp" ,"krJpAlign/aligne.krjp" , "HANNANUM");
-		ewc.setTargetWord(targetWord);
+		ewc.senseDir = "senseTagCorpora_koma_window3/";
+		ewc.windowSize = 3;
+//		ewc.setTargetWord(targetWord);
 //		extractWordCorpus ewc = new extractWordCorpus("testAlign/all.ko","testAlign/all.jp" ,"testAlign/aligned" , targetWord);
-//		ewc.process();
+		ewc.process();
 	}
 }

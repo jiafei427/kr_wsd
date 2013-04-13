@@ -129,7 +129,7 @@ public class makeCrossValidationFiles {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 //		makeCrossValidationFiles test = new makeCrossValidationFiles("senseTagCorpora_test", "train", 5);
-		makeCrossValidationFiles test = new makeCrossValidationFiles("senseTagCorpora", "train", 5);
+		makeCrossValidationFiles test = new makeCrossValidationFiles("senseTagCorpora_komaWindow2", "train", 5);
 		test.process();
 	}
 

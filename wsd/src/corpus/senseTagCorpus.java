@@ -38,6 +38,7 @@ public class senseTagCorpus {
 	        	youjinMeanCount = Integer.parseInt(read.substring(read.indexOf("(") + 1, read.indexOf(")"))) + 1;
 	        	System.out.println(targetWord);
 	        	
+	        	ewc.windowSize = 2;
 	        	ewc.senseDir = senseDir ;
 	        	ewc.setTargetWord(targetWord);
 	        	ewc.setMeanLimit(youjinMeanCount);
@@ -63,12 +64,12 @@ public class senseTagCorpus {
 		
 		senseTagCorpus st = new senseTagCorpus();
 		
-		st.senseDir = "senseTagCorpora/";
+		st.senseDir = "senseTagCorpora_komaWindow2/";
 		st.process("newsCorpus/newKoma/news.krwd","newsCorpus/newKoma/news.krtg","newsCorpus/newKoma/news.jpwd" ,"newsCorpus/newKoma/news.krjp" , "KOMA");
 		
 		
-		st.senseDir = "senseTagCorpora_Hannanum/";
-		st.process("newsCorpus/newHannanum/rawNews.krwd","newsCorpus/newHannanum/rawNews.krtg","newsCorpus/newHannanum/rawNews.jpwd" ,"newsCorpus/newHannanum/rawNews.krjp" , "HANNANUM");
+//		st.senseDir = "senseTagCorpora_Hannanum/";
+//		st.process("newsCorpus/newHannanum/rawNews.krwd","newsCorpus/newHannanum/rawNews.krtg","newsCorpus/newHannanum/rawNews.jpwd" ,"newsCorpus/newHannanum/rawNews.krjp" , "HANNANUM");
 
 	}
 
