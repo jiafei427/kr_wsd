@@ -15,13 +15,21 @@ public class senseTagCorpus {
 //	private String inFileName = "YoujinTest.txt";
 	private String inFileName = "Youjin.txt";
 	private String senseDir;
+	public int windowSize = 4;
+	String koFile, kotgFile, jpwdFile, alignFlie, anaChoice;
 	
 	/**
 	 * @param args
 	 */
+	senseTagCorpus(String koFile, String kotgFile, String jpwdFile, String alignFlie, String anaChoice){
+		this.koFile = koFile;
+		this.kotgFile = kotgFile;
+		this.jpwdFile = jpwdFile;
+		this.alignFlie = alignFlie;
+		this.anaChoice = anaChoice;
+	}
 	
-	
-	public void process(String koFile, String kotgFile, String jpwdFile, String alignFlie, String anaChoice){
+	public void process(){
 	    File inFile = new File(inFileName);
 	    
 	    BufferedReader inFileReader = null;
@@ -38,8 +46,8 @@ public class senseTagCorpus {
 	        	youjinMeanCount = Integer.parseInt(read.substring(read.indexOf("(") + 1, read.indexOf(")"))) + 1;
 	        	System.out.println(targetWord);
 	        	
-	        	ewc.windowSize = 2;
-	        	ewc.senseDir = senseDir ;
+	        	ewc.windowSize = windowSize;
+	        	ewc.senseDir = senseDir + "/";
 	        	ewc.setTargetWord(targetWord);
 	        	ewc.setMeanLimit(youjinMeanCount);
 	        	
@@ -62,10 +70,16 @@ public class senseTagCorpus {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		senseTagCorpus st = new senseTagCorpus();
+		senseTagCorpus st = new senseTagCorpus("newsCorpus/newKoma/news.krwd","newsCorpus/newKoma/news.krtg","newsCorpus/newKoma/news.jpwd" ,"newsCorpus/newKoma/news.krjp" , "KOMA");
+		makeCrossValidationFiles test; 
 		
-		st.senseDir = "senseTagCorpora_komaWindow2/";
-		st.process("newsCorpus/newKoma/news.krwd","newsCorpus/newKoma/news.krtg","newsCorpus/newKoma/news.jpwd" ,"newsCorpus/newKoma/news.krjp" , "KOMA");
+		for(int i = 1 ; i < 5 ; i++){
+			st.senseDir = "senseTagCorpora_komaWindow" + i;
+			st.process();
+			test = new makeCrossValidationFiles(st.senseDir, "train", 5);
+			test.process();
+		}
+		
 		
 		
 //		st.senseDir = "senseTagCorpora_Hannanum/";

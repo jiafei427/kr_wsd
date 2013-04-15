@@ -12,7 +12,8 @@ public class statis {
 	private String outFileName = "Statistic.txt";
 	private String testFileName = "Stat_Test.txt";
 	private String wordFileName = "YoujinClean.txt";
-	private String csvFileName = "word_statics.csv";
+	private String csvFileName;
+	private String wordStatCvsFileName;
 	/**
 	 * @param args
 	 */
@@ -30,6 +31,7 @@ public class statis {
 	    String buf;
 		String targetWord;
 		File csvFile;
+		File wordStatCvsFile;
 		extractWordCorpus ewc = new extractWordCorpus(koFile,  kotgFile,  jpwdFile,  alignFlie , anaChoice);
 //		extractWordCorpus ewc = new extractWordCorpus("komaAlign/final_koma.ko","komaAlign/final_koma.tg","komaAlign/final_koma.jp" ,"komaAlign/koma.aligned");
 //		extractWordCorpus ewc = new extractWordCorpus("newsCorpus/news.ko","newsCorpus/news.tg","newsCorpus/news.jp" ,"newsCorpus/news.aligned");
@@ -38,11 +40,20 @@ public class statis {
 	    	inFileReader = new BufferedReader(new FileReader(inFile));
 	    	fw = new FileWriter(outFile);
 	    	fw2 = new FileWriter(wordFile);
-	    	ewc.csvFileName = csvFileName;
-	    	csvFile = new File(csvFileName);
-	    	if(csvFile.exists())
-	    		csvFile.delete();
-	        
+	    	if(csvFileName != null){
+	    		ewc.csvFileName = csvFileName;
+	    		csvFile = new File(csvFileName);
+	    		if(csvFile.exists())
+	    			csvFile.delete();
+	    	}
+	    	if(wordStatCvsFileName != null){
+	    		ewc.wordStatCvsFileName = wordStatCvsFileName;
+	    		wordStatCvsFile = new File (wordStatCvsFileName);
+	    		if(wordStatCvsFile.exists())
+	    			wordStatCvsFile.delete();
+	    	}
+	    	
+	    	
 	        while ((read = inFileReader.readLine()) != null) {
 	        	targetWord = read.split("\t")[0].split(" ")[0];
 	        	youjinMeanCount = Integer.parseInt(read.substring(read.indexOf("(") + 1, read.indexOf(")"))) + 1;
@@ -54,7 +65,7 @@ public class statis {
 	        	
 	        	buf = ewc.process();
 	        	if(buf != null){
-	        		fw.write("**************************************************************************************\n");
+	        		fw.write("-----------------------------------------------------------------------------------------\n");
 	        		fw.write(read + "\n");
 	        		fw.write(buf.trim() + "\n");
 	        		eachAllSentSize += ewc.eachAllSentSize;
@@ -124,15 +135,16 @@ public class statis {
 		st.outFileName = "Statis_newsKoma.txt";
 		st.wordFileName = "YoujinClean_Koma.txt";
 //		st.csvFileName = "word_statics_Koma.csv";
+		st.wordStatCvsFileName = "wsd_koma_cv_result_analysis/finalWordStats.csv";
 		st.process("newsCorpus/newKoma/news.krwd","newsCorpus/newKoma/news.krtg","newsCorpus/newKoma/news.jpwd" ,"newsCorpus/newKoma/news.krjp" , "KOMA");
 
-		st = new statis();
-		st.outFileName = "Statis_newsHannanum.txt";
-		st.wordFileName = "YoujinClean_Hannanum.txt";
+//		st = new statis();
+//		st.outFileName = "Statis_newsHannanum.txt";
+//		st.wordFileName = "YoujinClean_Hannanum.txt";
 //		st.csvFileName = "word_statics_Hannanum.csv";
-		st.process("newsCorpus/newHannanum/rawNews.krwd","newsCorpus/newHannanum/rawNews.krtg","newsCorpus/newHannanum/rawNews.jpwd" ,"newsCorpus/newHannanum/rawNews.krjp" , "HANNANUM");
+//		st.process("newsCorpus/newHannanum/rawNews.krwd","newsCorpus/newHannanum/rawNews.krtg","newsCorpus/newHannanum/rawNews.jpwd" ,"newsCorpus/newHannanum/rawNews.krjp" , "HANNANUM");
 
-		//		st.testOneWord("배");
+//		st.testOneWord("배");
 	}
 	
 }

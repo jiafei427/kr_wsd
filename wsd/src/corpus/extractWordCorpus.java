@@ -5,7 +5,6 @@ import jap.ws4jSim;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +33,7 @@ public class extractWordCorpus {
 	private String alignFileName;
 	private String targetWord;
 	public String csvFileName;
+	public String wordStatCvsFileName;
 	
 	private int transCountThreshold = 6;
 	private int meanLimit;
@@ -307,19 +306,24 @@ public class extractWordCorpus {
 	    String krRead = "" , jpRead = "" , tagRead = "" , alignRead;
 	    String japTrans = "";
 	    String[] align , tags , jpSplit;
-	    int line = 0;
-	    int counter = 0, howmany = 0 ;
-	    int japTransCount;
 	    String id , japWord;
 	    String groupedWords = "";
 	    String buf = "";
+	    String eachSentBuff = "";
+	    String str = "";
+	    int line = 0;
+	    int counter = 0, howmany = 0 ;
+	    int japTransCount;
+	    int eachSentCounter = 0;
+	    int size;
+	    int eachsense;
+	    transPair tmpPair;
 	    List<ArrayList<String>> wsdTransList;
 	    ArrayList<ArrayList<Integer>> transLineNumbs;
 	    ArrayList <transPair> transPairs;
-	    transPair tmpPair;
-	    int eachSentCounter = 0;
-	    String eachSentBuff = "";
 	    ArrayList<Integer> tmpArrList;
+	    ArrayList <String> tmp;
+	    
 	    
 	    try {
 	    	krFileReader = new BufferedReader(new FileReader(krFile));
@@ -412,9 +416,9 @@ public class extractWordCorpus {
 			    groupedWords += japWord + " ";
 			    buf += id + "\t";
 			    
-			    eachSentCounter = lineNumb.get(japWord).size();
-			    eachSentBuff += japWord + "=" + eachSentCounter + "\t";
-			    eachAllSentSize += eachSentCounter;
+//			    eachSentCounter = lineNumb.get(japWord).size();
+//			    eachSentBuff += japWord + "=" + eachSentCounter + "\t";
+//			    eachAllSentSize += eachSentCounter;
 		    }
 		}
 		System.out.println(howmany);
@@ -432,21 +436,65 @@ public class extractWordCorpus {
 				if(csvFileName != null)
 					writeCvs(targetWord , wsdTransList, map);
 				
+				size =  wsdTransList.size();
+				
+				for(int i = 0; i < size; i++){
+					tmp = wsdTransList.get(i);
+					eachsense = 0;
+					for(int j = 0; j < tmp.size(); j++){
+						japWord = tmp.get(j);
+						
+						if(j ==0)
+							str += japWord;
+						eachSentCounter = map.get(japWord);
+						eachsense += eachSentCounter;
+						eachSentBuff += japWord + "=" + eachSentCounter + "\t";
+						eachAllSentSize += eachSentCounter;
+					}
+					str += "=" + eachsense + ",";
+				}
+				
 				buf = buf.trim() + "\n" + "All:" + eachAllSentSize + "\t" + eachSentBuff.trim() + "\n" + showListStr(wsdTransList);
 				eachSenseSize = wsdTransList.size();
+				str = targetWord + "," + eachAllSentSize + "," + eachSenseSize + "," + str.substring(0 , str.lastIndexOf(",")) + "\n";
+				
+				if(wordStatCvsFileName != null)
+					writeWordStatCvs(str);
 			}
 			else
 				buf = null;
 		}
 		
-		if(wsdTransList != null){
+		if(wsdTransList != null && senseDir != null ){
 			
 			transLineNumbs = getTransLineNumbs(wsdTransList , lineNumb);
-			
 			writeTransFile(transLineNumbs, wsdTransList);
 		}
 		
 		return buf;
+	}
+	
+	public void writeWordStatCvs(String str){
+		File cvsFile = new File(wordStatCvsFileName);
+		FileWriter fw = null;
+		
+		try {
+			fw = new FileWriter(cvsFile , true);
+			fw.write(str);
+			fw.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if(fw != null)
+				try {
+					fw.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 	}
 	
 	public void writeCvs(String target, List<ArrayList<String>> wsdTransList , HashMap<String, Integer> map){
