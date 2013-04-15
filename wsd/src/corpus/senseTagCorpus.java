@@ -73,8 +73,9 @@ public class senseTagCorpus {
 		senseTagCorpus st = new senseTagCorpus("newsCorpus/newKoma/news.krwd","newsCorpus/newKoma/news.krtg","newsCorpus/newKoma/news.jpwd" ,"newsCorpus/newKoma/news.krjp" , "KOMA");
 		makeCrossValidationFiles test; 
 		
-		for(int i = 1 ; i < 5 ; i++){
+		for(int i = 1 ; i < 6 ; i++){
 			st.senseDir = "senseTagCorpora_komaWindow" + i;
+			st.windowSize = i;
 			st.process();
 			test = new makeCrossValidationFiles(st.senseDir, "train", 5);
 			test.process();
